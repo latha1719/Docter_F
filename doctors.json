@@ -1,0 +1,137 @@
+[
+  {
+    "id": "1",
+    "name": "Dr. Vikram Malhotra",
+    "specialization": "Cardiology",
+    "experience": "15+ years",
+    "fee": 600,
+    "image": "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=1000",
+    "status": "Active"
+  },
+  {
+    "id": "2",
+    "name": "Dr. Sneha Verma",
+    "specialization": "Dermatology",
+    "experience": "12+ years",
+    "fee": 500,
+    "image": "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "3",
+    "name": "Dr. Rohan Desai",
+    "specialization": "Neurosurgery",
+    "experience": "18+ years",
+    "fee": 800,
+    "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "4",
+    "name": "Dr. Ananya Singh",
+    "specialization": "Pediatrics",
+    "experience": "10+ years",
+    "fee": 450,
+    "image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "5",
+    "name": "Dr. Arjun Sharma",
+    "specialization": "Orthopedics",
+    "experience": "14+ years",
+    "fee": 550,
+    "image": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "6",
+    "name": "Dr. Priya Patel",
+    "specialization": "Ophthalmology",
+    "experience": "9+ years",
+    "fee": 400,
+    "image": "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "7",
+    "name": "Dr. Sameer Reddy",
+    "specialization": "Gastroenterology",
+    "experience": "11+ years",
+    "fee": 650,
+    "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "8",
+    "name": "Dr. Kavita Iyer",
+    "specialization": "Gynecology",
+    "experience": "16+ years",
+    "fee": 700,
+    "image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "9",
+    "name": "Dr. Amit Bansal",
+    "specialization": "Urology",
+    "experience": "7+ years",
+    "fee": 500,
+    "image": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "10",
+    "name": "Dr. Ritu Kapoor",
+    "specialization": "Psychiatry",
+    "experience": "13+ years",
+    "fee": 900,
+    "image": "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "11",
+    "name": "Dr. Rajesh Khanna",
+    "specialization": "General Medicine",
+    "experience": "20+ years",
+    "fee": 500,
+    "image": "https://images.unsplash.com/photo-1550831107-1553da8c8464?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "12",
+    "name": "Dr. Sunita Rao",
+    "specialization": "ENT Specialist",
+    "experience": "8+ years",
+    "fee": 450,
+    "image": "https://plus.unsplash.com/premium_photo-1661764878654-3d0fc2eefcca?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "13",
+    "name": "Dr. Mani Shankar",
+    "specialization": "Pulmonologist",
+    "experience": "11+ years",
+    "fee": 600,
+    "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "14",
+    "name": "Dr. Lakshmi Menon",
+    "specialization": "Endocrinologist",
+    "experience": "9+ years",
+    "fee": 550,
+    "image": "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  },
+  {
+    "id": "15",
+    "name": "Dr. Varun Joshi",
+    "specialization": "Dentist",
+    "experience": "6+ years",
+    "fee": 350,
+    "image": "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=800",
+    "status": "Active"
+  }
+]
