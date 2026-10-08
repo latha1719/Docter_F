@@ -12,12 +12,21 @@ type Doctor = {
   experience: string;
   fee: number;
   image: string;
+  availableDates?: string[];
+  availableTimeSlots?: string[];
 }
 
 export default function DoctorManagement() {
   const [doctors, setDoctors] = useState<Doctor[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isSlotModalOpen, setIsSlotModalOpen] = useState(false)
+  
+  // Selected doctor for slot management
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
+  const [editStatus, setEditStatus] = useState('Active')
+  const [editFee, setEditFee] = useState(500)
+  const [editAvailableDates, setEditAvailableDates] = useState<string>('')
   
   // New doctor form state
   const [newName, setNewName] = useState('')
@@ -51,6 +60,49 @@ export default function DoctorManagement() {
       } catch (error) {
         console.error('Delete failed:', error)
       }
+    }
+  }
+
+  const handleOpenSlotModal = (doctor: Doctor) => {
+    setSelectedDoctor(doctor)
+    setEditStatus(doctor.status || 'Active')
+    setEditFee(doctor.fee || 500)
+    setEditAvailableDates((doctor.availableDates || []).join(', '))
+    setIsSlotModalOpen(true)
+  }
+
+  const handleSaveSlotManagement = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!selectedDoctor) return
+
+    const parsedDates = editAvailableDates
+      .split(',')
+      .map(d => d.trim())
+      .filter(d => d.length > 0)
+
+    try {
+      const res = await fetch('/api/doctors', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: selectedDoctor.id,
+          status: editStatus,
+          fee: Number(editFee),
+          availableDates: parsedDates
+        })
+      })
+
+      if (res.ok) {
+        const updated = await res.json()
+        setDoctors(doctors.map(d => d.id === updated.id ? updated : d))
+        setIsSlotModalOpen(false)
+        setSelectedDoctor(null)
+      } else {
+        alert('Failed to update doctor availability')
+      }
+    } catch (error) {
+      console.error('Error updating doctor availability:', error)
+      alert('Error updating doctor availability')
     }
   }
 
@@ -109,8 +161,8 @@ export default function DoctorManagement() {
     <div className="management-wrapper">
       <div className="management-header">
         <div>
-          <h2>Doctor Management</h2>
-          <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Manage your medical staff and consultation fees.</p>
+          <h2>Doctor Management & Slot Availability</h2>
+          <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Manage your medical staff, working dates, time slots, and consultation fees.</p>
         </div>
         <button className="add-btn" onClick={() => setIsModalOpen(true)}>
           + Add New Doctor
@@ -162,7 +214,12 @@ export default function DoctorManagement() {
                     </span>
                   </td>
                   <td className="actions">
-                    <button className="action-btn edit">Update</button>
+                    <button 
+                      className="action-btn edit"
+                      onClick={() => handleOpenSlotModal(doctor)}
+                    >
+                      📅 Manage Slots
+                    </button>
                     <button 
                       className="action-btn delete"
                       onClick={() => handleDelete(doctor.id)}
@@ -183,6 +240,68 @@ export default function DoctorManagement() {
         </table>
       </div>
 
+      {/* Modal for Slot & Availability Management */}
+      {isSlotModalOpen && selectedDoctor && (
+        <div className="modal-overlay">
+          <div className="modal-content card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3 style={{ margin: 0, fontSize: '1.25rem' }}>Manage Doctor Availability: {selectedDoctor.name}</h3>
+              <button onClick={() => setIsSlotModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: '1.2rem' }}>
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveSlotManagement}>
+              <div className="form-group">
+                <label>Availability Status</label>
+                <select 
+                  className="input-select"
+                  value={editStatus}
+                  onChange={(e) => setEditStatus(e.target.value)}
+                >
+                  <option value="Active">Active (Available for Booking)</option>
+                  <option value="On Leave">On Leave (Unavailable)</option>
+                  <option value="Unavailable">Unavailable</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Consultation Fee (₹)</label>
+                <input 
+                  type="number"
+                  className="input-field"
+                  value={editFee}
+                  onChange={(e) => setEditFee(Number(e.target.value))}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Available Booking Dates (Comma Separated YYYY-MM-DD)</label>
+                <input 
+                  type="text"
+                  className="input-field"
+                  placeholder="e.g. 2026-10-10, 2026-10-14, 2026-10-21 (Leave empty for all future dates)"
+                  value={editAvailableDates}
+                  onChange={(e) => setEditAvailableDates(e.target.value)}
+                />
+                <span style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem', display: 'block' }}>
+                  Specify exact dates the doctor is available for consultation.
+                </span>
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="cancel-btn" onClick={() => setIsSlotModalOpen(false)}>Cancel</button>
+                <button type="submit" className="submit-btn" style={{ background: '#0284c7', color: 'white' }}>
+                  Save Availability Settings
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Adding New Doctor */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content card">
@@ -209,6 +328,7 @@ export default function DoctorManagement() {
                 <label>Full Name</label>
                 <input 
                   type="text" 
+                  className="input-field"
                   placeholder="e.g. Dr. Sneha Verma" 
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
@@ -221,6 +341,7 @@ export default function DoctorManagement() {
                   <label>Specialization</label>
                   <input 
                     type="text" 
+                    className="input-field"
                     placeholder="e.g. Cardiologist" 
                     value={newSpecialization}
                     onChange={(e) => setNewSpecialization(e.target.value)}
@@ -232,6 +353,7 @@ export default function DoctorManagement() {
                   <label>Experience</label>
                   <input 
                     type="text" 
+                    className="input-field"
                     placeholder="e.g. 10+ years" 
                     value={newExperience}
                     onChange={(e) => setNewExperience(e.target.value)}
@@ -244,6 +366,7 @@ export default function DoctorManagement() {
                 <label>Consultation Fee (₹)</label>
                 <input 
                   type="number" 
+                  className="input-field"
                   placeholder="500" 
                   value={newFee}
                   onChange={(e) => setNewFee(Number(e.target.value))}
@@ -296,27 +419,29 @@ export default function DoctorManagement() {
         .status-pill { padding: 0.25rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
         .status-pill.active { background: #ecfdf5; color: #10b981; }
         .status-pill.on-leave { background: #fef2f2; color: #ef4444; }
+        .status-pill.unavailable { background: #fef2f2; color: #ef4444; }
 
         .actions { display: flex; gap: 0.5rem; }
         .action-btn { padding: 0.4rem 0.8rem; border-radius: 0.6rem; border: 1px solid #e2e8f0; background: white; cursor: pointer; font-size: 0.8rem; font-weight: 500; }
         .action-btn.edit:hover { background: #f0f9ff; border-color: #3b82f6; color: #3b82f6; }
         .action-btn.delete:hover { background: #fef2f2; border-color: #ef4444; color: #ef4444; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
+        .modal-content { width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; }
         .form-group { margin-bottom: 1.25rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #475569; font-size: 0.9rem; }
-        input { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.75rem; }
+        .input-field, .input-select { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.75rem; font-size: 0.9rem; outline: none; }
+        .input-field:focus, .input-select:focus { border-color: #0284c7; }
 
         .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; }
         .upload-btn { border: 2px dashed #e2e8f0; color: #64748b; background-color: #f8fafc; padding: 8px 20px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
         .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; }
         .image-preview { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
 
-        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
         .cancel-btn { background: #f1f5f9; color: #64748b; padding: 0.6rem 1.2rem; border-radius: 0.75rem; border: none; font-weight: 600; cursor: pointer; }
+        .submit-btn { padding: 0.6rem 1.2rem; border-radius: 0.75rem; border: none; font-weight: 600; cursor: pointer; }
       `}</style>
     </div>
   )
 }
-

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import styles from './home.module.css'
 
 export default function Home() {
@@ -6,16 +7,30 @@ export default function Home() {
     <div className={styles.homeWrapper}>
       {/* HERO SECTION */}
       <section className={styles.hero}>
-        <h1 className={styles.heroTitle}>
-          World-Class Care at Your Fingertips
-        </h1>
-        <p className={styles.heroSubtitle}>
-          Our hospital provides access to highly qualified and experienced doctors across multiple specialties. Book your professional consultation in seconds.
-        </p>
-        <div className={styles.heroBtns}>
-          <Link href="/doctors">
-            <button className={styles.primaryBtn}>Explore Specialists</button>
-          </Link>
+        <div className={styles.heroContent}>
+          <div className={styles.heroText}>
+            <h1 className={styles.heroTitle}>
+              World-Class Care at Your Fingertips
+            </h1>
+            <p className={styles.heroSubtitle}>
+              Our hospital provides access to highly qualified and experienced doctors across multiple specialties. Book your professional consultation in seconds.
+            </p>
+            <div className={styles.heroBtns}>
+              <Link href="/doctors">
+                <button className={styles.primaryBtn}>Explore Specialists</button>
+              </Link>
+            </div>
+          </div>
+          <div className={styles.heroImageWrapper}>
+            <Image
+              src="/img2.jpg"
+              alt="Professional Doctor"
+              width={480}
+              height={320}
+              className={styles.heroImage}
+              priority
+            />
+          </div>
         </div>
       </section>
 
@@ -29,7 +44,7 @@ export default function Home() {
             Patients can view years of experience to choose the right specialist confidently.
           </p>
           <p className={styles.aboutText}>
-            Every profile is designed to give a clear and user-friendly overview of the doctor’s background. 
+            Every profile is designed to give a clear and user-friendly overview of the doctor's background. 
             This helps patients make quick and informed decisions while booking appointments. 
             Our goal is to ensure a smooth, reliable, and efficient doctor consultation experience for everyone.
           </p>
@@ -49,9 +64,11 @@ export default function Home() {
         </div>
 
         <div className={styles.imageOverlay}>
-          <img 
-            src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=2070" 
-            alt="Modern Hospital" 
+          <Image 
+            src="/img4.jpg" 
+            alt="Professional Doctor" 
+            width={600}
+            height={400}
             className={styles.aboutImage}
           />
         </div>

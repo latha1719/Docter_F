@@ -1,0 +1,70 @@
+[
+  {
+    "id": "RX_1791356792279",
+    "appointmentId": "1791356792279",
+    "doctorName": "Dr. Rohan Desai",
+    "doctorSpecialization": "Neurosurgery",
+    "doctorImage": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=800",
+    "patientName": "saravanan",
+    "age": "10",
+    "date": "2026-10-29",
+    "diagnosis": "Fever",
+    "notes": "Prescription & medical record auto-generated upon booking. Doctor advice: Drink plenty of water, get adequate rest, and take prescribed medication on time.",
+    "medicines": [
+      {
+        "name": "Paracetamol 650mg",
+        "dosage": "1 Tablet",
+        "frequency": "Thrice daily after food",
+        "duration": "5 Days"
+      },
+      {
+        "name": "Cetirizine 10mg",
+        "dosage": "1 Tablet",
+        "frequency": "Once daily at night",
+        "duration": "5 Days"
+      },
+      {
+        "name": "Vitamin C 500mg",
+        "dosage": "1 Chewable Tablet",
+        "frequency": "Once daily",
+        "duration": "10 Days"
+      }
+    ],
+    "status": "Active",
+    "createdAt": "2026-10-07T07:06:32.279Z"
+  },
+  {
+    "id": "RX_1791212417718",
+    "appointmentId": "1791212417718",
+    "doctorName": "Dr. Varun Joshi",
+    "doctorSpecialization": "Dentist",
+    "doctorImage": "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800",
+    "patientName": "madhu",
+    "age": "23",
+    "date": "2026-12-25",
+    "diagnosis": "Normal chekup",
+    "notes": "Prescription & medical record auto-generated upon booking. Doctor advice: Drink plenty of water, get adequate rest, and take prescribed medication on time.",
+    "medicines": [
+      {
+        "name": "Amoxicillin 500mg",
+        "dosage": "1 Capsule",
+        "frequency": "Thrice daily after food",
+        "duration": "5 Days"
+      },
+      {
+        "name": "Ibuprofen 400mg",
+        "dosage": "1 Tablet",
+        "frequency": "As needed for acute tooth pain",
+        "duration": "5 Days"
+      },
+      {
+        "name": "Chlorhexidine Antiseptic Rinse",
+        "dosage": "10 ml gargle",
+        "frequency": "Twice daily",
+        "duration": "7 Days"
+      }
+    ],
+    "status": "Active",
+    "createdAt": "2026-10-05T15:00:17.718Z"
+  }
+]

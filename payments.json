@@ -1,0 +1,49 @@
+[
+  {
+    "id": "PAY_1791356792279",
+    "appointmentId": "1791356792279",
+    "doctorName": "Dr. Rohan Desai",
+    "doctorImage": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=800",
+    "specialization": "Neurosurgery",
+    "patientName": "saravanan",
+    "contact": "8220408539",
+    "amount": 800,
+    "paymentMethod": "UPI (Google Pay)",
+    "status": "Paid",
+    "failureReason": null,
+    "paidAt": "2026-10-07T07:06:32.279Z",
+    "date": "2026-10-29",
+    "time": "11:30 am - 11:45 am"
+  },
+  {
+    "id": "PAY_1791212417718",
+    "appointmentId": "1791212417718",
+    "doctorName": "Dr. Varun Joshi",
+    "doctorImage": "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800",
+    "specialization": "Dentist",
+    "patientName": "madhu",
+    "contact": "9745175623",
+    "amount": 350,
+    "paymentMethod": "Card (**** 7894)",
+    "status": "Paid",
+    "failureReason": null,
+    "paidAt": "2026-10-05T15:00:17.718Z",
+    "date": "2026-12-25",
+    "time": "11:30 am - 11:45 am"
+  },
+  {
+    "id": "PAY_1791356792279",
+    "appointmentId": "1791356792279",
+    "doctorName": "Dr. Rohan Desai",
+    "doctorImage": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=800",
+    "specialization": "Neurosurgery",
+    "patientName": "saravanan",
+    "contact": "8220408539",
+    "amount": 800,
+    "paymentMethod": "UPI (Google Pay)",
+    "status": "Paid",
+    "paidAt": "2026-10-07T07:06:32.279Z",
+    "date": "2026-10-29",
+    "time": "11:30 am - 11:45 am"
+  }
+]

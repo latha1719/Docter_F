@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import styles from './dashboard.module.css'
+import NotificationBell from '../components/NotificationBell'
 
 type Appointment = {
-  id: string
+  id?: string
   doctorName: string
   doctorImage: string
   experience: string
@@ -13,39 +14,72 @@ type Appointment = {
   date: string
   time: string
   patientName: string
-  status: string
-  createdAt: string
+  status?: string
+  createdAt?: string
+  problem?: string
+  contact?: string
 }
 
 export default function Dashboard() {
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
   const [stats, setStats] = useState({
     upcoming: 0,
     past: 0,
-    totalSpend: 0
+    totalSpend: 0,
+    prescriptionsCount: 0
   })
 
   const fetchDashboardData = async () => {
+    let rxCount = 0
     try {
       setLoading(true)
       setError("")
-      const res = await fetch('/api/appointments')
-      if (!res.ok) throw new Error("Failed to sync with hospital database")
-      const data: Appointment[] = await res.json()
+      const [resApps, resRx] = await Promise.all([
+        fetch('/api/appointments'),
+        fetch('/api/prescriptions')
+      ])
+
+      let data: Appointment[] = []
+      if (resApps.ok) {
+        data = await resApps.json()
+      } else {
+        console.warn("Failed to sync with hospital database. Falling back to local storage.")
+      }
+
+      if (resRx.ok) {
+        const rxData = await resRx.json()
+        rxCount = rxData.length
+      }
+      
+      // Merge localStorage appointments if present
+      try {
+        const stored = localStorage.getItem("appointments")
+        if (stored) {
+          const localApps: Appointment[] = JSON.parse(stored)
+          localApps.forEach(la => {
+            const exists = data.some(d => (d.id && la.id && d.id === la.id) || (d.date === la.date && d.time === la.time && d.patientName === la.patientName))
+            if (!exists) {
+              data.push(la)
+            }
+          })
+        }
+      } catch (e) {
+        console.error("LocalStorage merge error:", e)
+      }
       
       setAppointments(data)
       
-      // Calculate stats
-      const now = new Date()
+      // Calculate stats with date string comparison (yyyy-mm-dd)
+      const todayStr = new Date().toISOString().split("T")[0]
       let upcomingCount = 0
       let pastCount = 0
       let totalFee = 0
       
       data.forEach(app => {
-        const appDate = new Date(app.date)
-        if (appDate >= now) upcomingCount++
+        if (app.date >= todayStr) upcomingCount++
         else pastCount++
         totalFee += Number(app.fee || 0)
       })
@@ -53,11 +87,32 @@ export default function Dashboard() {
       setStats({
         upcoming: upcomingCount,
         past: pastCount,
-        totalSpend: totalFee
+        totalSpend: totalFee,
+        prescriptionsCount: rxCount
       })
     } catch (err) {
       console.error("Dashboard fetch error:", err)
-      setError("Unable to load real-time stats. Displaying cached data.")
+      setError("Unable to connect to server. Displaying local data.")
+      
+      try {
+        const stored = localStorage.getItem("appointments")
+        if (stored) {
+          const localApps: Appointment[] = JSON.parse(stored)
+          setAppointments(localApps)
+          const todayStr = new Date().toISOString().split("T")[0]
+          let upcomingCount = 0
+          let pastCount = 0
+          let totalFee = 0
+          localApps.forEach(app => {
+            if (app.date >= todayStr) upcomingCount++
+            else pastCount++
+            totalFee += Number(app.fee || 0)
+          })
+          setStats({ upcoming: upcomingCount, past: pastCount, totalSpend: totalFee, prescriptionsCount: rxCount })
+        }
+      } catch {
+        // empty
+      }
     } finally {
       setLoading(false)
     }
@@ -68,15 +123,26 @@ export default function Dashboard() {
   }, [])
 
   const fallbackAvatar = "https://cdn-icons-png.flaticon.com/512/3774/3774299.png"
+  const todayStr = new Date().toISOString().split("T")[0]
 
-  // Get 3 most recent appointments with safety sort
-  const recentAppointments = [...appointments]
+  // Filter and sort appointments
+  const filteredAppointments = [...appointments]
+    .filter(app => {
+      if (!searchTerm) return true
+      const term = searchTerm.toLowerCase()
+      return (
+        (app.doctorName || '').toLowerCase().includes(term) ||
+        (app.patientName || '').toLowerCase().includes(term) ||
+        (app.date || '').includes(term) ||
+        (app.problem || '').toLowerCase().includes(term)
+      )
+    })
     .sort((a, b) => {
       const dateA = a.createdAt ? new Date(a.createdAt).getTime() : new Date(a.date).getTime()
       const dateB = b.createdAt ? new Date(b.createdAt).getTime() : new Date(b.date).getTime()
       return dateB - dateA
     })
-    .slice(0, 3)
+    .slice(0, 5)
 
   return (
     <div className={styles.container}>
@@ -100,6 +166,10 @@ export default function Dashboard() {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
             <span>Appointments</span>
           </Link>
+          <Link href="/records" className={styles.navItem}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+            <span>Medical Records</span>
+          </Link>
           <Link href="/doctors" className={styles.navItem}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             <span>Doctors</span>
@@ -118,9 +188,15 @@ export default function Dashboard() {
         <header className={styles.navbar}>
           <div className={styles.navSearch}>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" placeholder="Search appointments..." />
+            <input 
+              type="text" 
+              placeholder="Search appointments..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
           <div className={styles.navProfile}>
+            <NotificationBell />
             <div className={styles.navProfileText}>
               <span className={styles.navProfileName}>Patient Portal</span>
               <span className={styles.navProfileRole}>Active User</span>
@@ -147,7 +223,7 @@ export default function Dashboard() {
 
           {/* Stats Cards */}
           <div className={styles.statsGrid}>
-            <div className={styles.statCard}>
+            <Link href="/history" className={styles.statCard} style={{ textDecoration: 'none', cursor: 'pointer' }}>
               <div className={`${styles.statIcon} ${styles.iconBlue}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
               </div>
@@ -155,9 +231,9 @@ export default function Dashboard() {
                 <h3 className={styles.statValue}>{loading ? "..." : stats.upcoming}</h3>
                 <p className={styles.statLabel}>Upcoming Appointments</p>
               </div>
-            </div>
+            </Link>
             
-            <div className={styles.statCard}>
+            <Link href="/history" className={styles.statCard} style={{ textDecoration: 'none', cursor: 'pointer' }}>
               <div className={`${styles.statIcon} ${styles.iconGreen}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
               </div>
@@ -165,17 +241,17 @@ export default function Dashboard() {
                 <h3 className={styles.statValue}>{loading ? "..." : stats.past}</h3>
                 <p className={styles.statLabel}>Past Consultations</p>
               </div>
-            </div>
+            </Link>
 
-            <div className={styles.statCard}>
+            <Link href="/records" className={styles.statCard} style={{ textDecoration: 'none', cursor: 'pointer' }}>
               <div className={`${styles.statIcon} ${styles.iconPurple}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
               </div>
               <div className={styles.statInfo}>
-                <h3 className={styles.statValue}>0</h3>
+                <h3 className={styles.statValue}>{loading ? "..." : stats.prescriptionsCount}</h3>
                 <p className={styles.statLabel}>Active Prescriptions</p>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Quick Actions */}
@@ -200,35 +276,40 @@ export default function Dashboard() {
             <div className={styles.appointmentList}>
               {loading ? (
                 <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>Syncing with hospital database...</div>
-              ) : recentAppointments.length === 0 ? (
-                <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>No recent appointments found.</div>
+              ) : filteredAppointments.length === 0 ? (
+                <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>
+                  {searchTerm ? "No appointments matching your search." : "No recent appointments found."}
+                </div>
               ) : (
-                recentAppointments.map((app) => (
-                  <div key={app.id} className={styles.appointmentCard}>
-                    <div className={styles.appointmentDoctor}>
-                      <img 
-                        src={app.doctorImage} 
-                        alt={app.doctorName} 
-                        className={styles.doctorAvatar} 
-                        style={{ objectFit: 'cover' }}
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = fallbackAvatar;
-                        }}
-                      />
-                      <div className={styles.doctorInfo}>
-                        <h4>{app.doctorName}</h4>
-                        <p>{app.experience}</p>
+                filteredAppointments.map((app, index) => {
+                  const isUpcoming = app.date >= todayStr
+                  return (
+                    <div key={app.id || index} className={styles.appointmentCard}>
+                      <div className={styles.appointmentDoctor}>
+                        <img 
+                          src={app.doctorImage} 
+                          alt={app.doctorName} 
+                          className={styles.doctorAvatar} 
+                          style={{ objectFit: 'cover' }}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = fallbackAvatar;
+                          }}
+                        />
+                        <div className={styles.doctorInfo}>
+                          <h4>{app.doctorName}</h4>
+                          <p>{app.experience} {app.patientName ? `• Patient: ${app.patientName}` : ''}</p>
+                        </div>
+                      </div>
+                      <div className={styles.appointmentTime}>
+                        <span className={styles.timeDate}>{app.date} • {app.time}</span>
+                        <span className={`${styles.timeStatus} ${isUpcoming ? styles.statusUpcoming : styles.statusCompleted}`}>
+                          {isUpcoming ? "Scheduled" : "Completed"}
+                        </span>
                       </div>
                     </div>
-                    <div className={styles.appointmentTime}>
-                      <span className={styles.timeDate}>{app.date} • {app.time}</span>
-                      <span className={`${styles.timeStatus} ${new Date(app.date) >= new Date() ? styles.statusUpcoming : styles.statusCompleted}`}>
-                        {new Date(app.date) >= new Date() ? "Scheduled" : "Completed"}
-                      </span>
-                    </div>
-                  </div>
-                ))
+                  )
+                })
               )}
             </div>
           </div>

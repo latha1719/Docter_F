@@ -6,7 +6,9 @@
     "experience": "15+ years",
     "fee": 600,
     "image": "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=1000",
-    "status": "Active"
+    "status": "Active",
+    "rating": 4.9,
+    "reviewCount": 128
   },
   {
     "id": "2",
@@ -15,7 +17,9 @@
     "experience": "12+ years",
     "fee": 500,
     "image": "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "status": "Active",
+    "rating": 4.8,
+    "reviewCount": 98
   },
   {
     "id": "3",
@@ -24,7 +28,9 @@
     "experience": "18+ years",
     "fee": 800,
     "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "status": "Active",
+    "rating": 4.9,
+    "reviewCount": 142
   },
   {
     "id": "4",
@@ -33,7 +39,9 @@
     "experience": "10+ years",
     "fee": 450,
     "image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "status": "Active",
+    "rating": 4.7,
+    "reviewCount": 84
   },
   {
     "id": "5",
@@ -42,7 +50,9 @@
     "experience": "14+ years",
     "fee": 550,
     "image": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "status": "Active",
+    "rating": 4.8,
+    "reviewCount": 110
   },
   {
     "id": "6",
@@ -50,8 +60,10 @@
     "specialization": "Ophthalmology",
     "experience": "9+ years",
     "fee": 400,
-    "image": "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "image": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=800",
+    "status": "Active",
+    "rating": 4.6,
+    "reviewCount": 65
   },
   {
     "id": "7",
@@ -59,8 +71,10 @@
     "specialization": "Gastroenterology",
     "experience": "11+ years",
     "fee": 650,
-    "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "image": "https://images.unsplash.com/photo-1637059824899-a441006a6875?auto=format&fit=crop&q=80&w=800",
+    "status": "Active",
+    "rating": 4.7,
+    "reviewCount": 79
   },
   {
     "id": "8",
@@ -68,8 +82,10 @@
     "specialization": "Gynecology",
     "experience": "16+ years",
     "fee": 700,
-    "image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "image": "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?auto=format&fit=crop&q=80&w=800",
+    "status": "Active",
+    "rating": 4.9,
+    "reviewCount": 105
   },
   {
     "id": "9",
@@ -78,7 +94,9 @@
     "experience": "7+ years",
     "fee": 500,
     "image": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "status": "Active",
+    "rating": 4.5,
+    "reviewCount": 52
   },
   {
     "id": "10",
@@ -87,7 +105,9 @@
     "experience": "13+ years",
     "fee": 900,
     "image": "https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "status": "Active",
+    "rating": 4.9,
+    "reviewCount": 135
   },
   {
     "id": "11",
@@ -96,7 +116,9 @@
     "experience": "20+ years",
     "fee": 500,
     "image": "https://images.unsplash.com/photo-1550831107-1553da8c8464?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "status": "Active",
+    "rating": 4.8,
+    "reviewCount": 161
   },
   {
     "id": "12",
@@ -105,7 +127,9 @@
     "experience": "8+ years",
     "fee": 450,
     "image": "https://plus.unsplash.com/premium_photo-1661764878654-3d0fc2eefcca?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "status": "Active",
+    "rating": 4.6,
+    "reviewCount": 48
   },
   {
     "id": "13",
@@ -113,8 +137,10 @@
     "specialization": "Pulmonologist",
     "experience": "11+ years",
     "fee": 600,
-    "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "image": "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=800",
+    "status": "Active",
+    "rating": 4.7,
+    "reviewCount": 72
   },
   {
     "id": "14",
@@ -122,8 +148,10 @@
     "specialization": "Endocrinologist",
     "experience": "9+ years",
     "fee": 550,
-    "image": "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "image": "https://images.unsplash.com/photo-1591604021695-0c69b7c05981?auto=format&fit=crop&q=80&w=800",
+    "status": "Active",
+    "rating": 4.8,
+    "reviewCount": 68
   },
   {
     "id": "15",
@@ -131,7 +159,9 @@
     "specialization": "Dentist",
     "experience": "6+ years",
     "fee": 350,
-    "image": "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=800",
-    "status": "Active"
+    "image": "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800",
+    "status": "Active",
+    "rating": 4.5,
+    "reviewCount": 41
   }
 ]

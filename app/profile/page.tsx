@@ -7,7 +7,19 @@ import styles from './settings.module.css'
 export default function Settings() {
   const [email, setEmail] = useState('j***@gmail.com')
   const [name, setName] = useState('John Doe')
-  
+  const [userPhoto, setUserPhoto] = useState<string | null>('/user-photo.jpg')
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setUserPhoto(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   return (
     <div className={styles.container}>
       {/* Central glow */}
@@ -40,7 +52,31 @@ export default function Settings() {
           </h2>
           
           <div className={styles.profileTop}>
-            <div className={styles.avatar}>J</div>
+            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              {userPhoto ? (
+                <img 
+                  src={userPhoto} 
+                  alt="Profile" 
+                  style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #3b82f6' }} 
+                />
+              ) : (
+                <div className={styles.avatar}>{name ? name.charAt(0).toUpperCase() : 'J'}</div>
+              )}
+              <label 
+                style={{ 
+                  display: 'block', 
+                  marginTop: '0.5rem', 
+                  fontSize: '0.8rem', 
+                  color: '#3b82f6', 
+                  fontWeight: 600, 
+                  cursor: 'pointer',
+                  textAlign: 'center'
+                }}
+              >
+                Change Photo
+                <input type="file" accept="image/*" onChange={handlePhotoUpload} style={{ display: 'none' }} />
+              </label>
+            </div>
             <div className={styles.profileInfo}>
               <div className={styles.formGroup}>
                 <label className={styles.label}>Full Name</label>

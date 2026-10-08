@@ -4,10 +4,10 @@ import React, { useState } from 'react'
 
 export default function AppointmentManagement() {
   const [appointments, setAppointments] = useState([
-    { id: 101, patient: 'John Doe', experience: '15+ years', date: '2026-04-16', time: '10:00 AM', type: 'Consultation', status: 'Upcoming' },
-    { id: 102, patient: 'Jane Smith', experience: '8+ years', date: '2026-04-16', time: '11:00 AM', type: 'Follow-up', status: 'Pending' },
-    { id: 103, patient: 'Robert Brown', experience: '12+ years', date: '2026-04-17', time: '09:30 AM', type: 'Consultation', status: 'Upcoming' },
-    { id: 104, patient: 'Mark Davis', experience: '5+ years', date: '2026-04-17', time: '02:00 PM', type: 'Consultation', status: 'Completed' },
+    { id: 101, patient: 'John Doe', doctor: 'Dr. Varun Joshi', date: '2026-04-16', time: '10:00 AM', type: 'Consultation', status: 'Upcoming' },
+    { id: 102, patient: 'Jane Smith', doctor: 'Dr. Sneha Verma', date: '2026-04-16', time: '11:00 AM', type: 'Follow-up', status: 'Pending' },
+    { id: 103, patient: 'Robert Brown', doctor: 'Dr. Rahul Sharma', date: '2026-04-17', time: '09:30 AM', type: 'Consultation', status: 'Upcoming' },
+    { id: 104, patient: 'Mark Davis', doctor: 'Dr. Priya Kapoor', date: '2026-04-17', time: '02:00 PM', type: 'Consultation', status: 'Completed' },
   ])
 
   const [filter, setFilter] = useState('All')
@@ -45,7 +45,7 @@ export default function AppointmentManagement() {
             <tr>
               <th>ID</th>
               <th>Patient</th>
-              <th>Experience</th>
+              <th>Doctor</th>
               <th>Schedule</th>
               <th>Type</th>
               <th>Status</th>
@@ -60,7 +60,10 @@ export default function AppointmentManagement() {
                    <div className="avatar-mini">{app.patient.charAt(0)}</div>
                    {app.patient}
                 </td>
-                <td className="doctor-cell">{app.experience}</td>
+                <td className="doctor-cell">
+                   <div className="avatar-mini doc">{app.doctor.replace('Dr. ', '').charAt(0)}</div>
+                   {app.doctor}
+                </td>
                 <td>
                   <div className="schedule-info">
                     <span className="date">{app.date}</span>

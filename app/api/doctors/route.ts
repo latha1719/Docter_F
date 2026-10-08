@@ -4,31 +4,20 @@ import path from 'path';
 
 const dbPath = path.join(process.cwd(), 'doctors.json');
 
-// Helper to initialize db
 function getDoctors() {
   try {
     if (!fs.existsSync(dbPath)) {
-      const initial = [
-        {
-          id: "1",
-          name: "Dr. Vikram Malhotra",
-          specialization: "Cardiology Specialist",
-          availableDates: ["2026-04-10", "2026-04-14"],
-          image: "/images/doctors/dr_alexander_sterling_1777615404084.png",
-          experience: "10+ years",
-          fee: 500,
-          status: "Active",
-          appointments: 145
-        }
-      ];
-      fs.writeFileSync(dbPath, JSON.stringify(initial, null, 2));
-      return initial;
+      return [];
     }
     const data = fs.readFileSync(dbPath, 'utf8');
     return JSON.parse(data);
   } catch (err) {
     return [];
   }
+}
+
+function saveDoctors(doctors: any[]) {
+  fs.writeFileSync(dbPath, JSON.stringify(doctors, null, 2));
 }
 
 export async function GET() {
@@ -44,21 +33,50 @@ export async function POST(req: Request) {
     const newDoctor = {
       id: Date.now().toString(),
       name: body.name,
-      specialization: body.specialization,
+      specialization: body.specialization || body.specialty || "General Specialist",
       experience: body.experience || "0 years",
-      fee: body.fee || 500,
-      image: body.image || "https://via.placeholder.com/150",
-      availableDates: ["2026-05-01", "2026-05-05"],
-      status: "Active",
-      appointments: 0
+      fee: Number(body.fee) || 500,
+      image: body.image || "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=800",
+      availableDates: Array.isArray(body.availableDates) ? body.availableDates : [],
+      availableTimeSlots: Array.isArray(body.availableTimeSlots) ? body.availableTimeSlots : [],
+      status: body.status || "Active",
+      rating: 5.0,
+      reviewCount: 0
     };
     
     doctors.push(newDoctor);
-    fs.writeFileSync(dbPath, JSON.stringify(doctors, null, 2));
+    saveDoctors(doctors);
     
     return NextResponse.json(newDoctor, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to add doctor' }, { status: 500 });
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+    if (!body.id) {
+      return NextResponse.json({ error: 'Doctor ID is required for update' }, { status: 400 });
+    }
+
+    const doctors = getDoctors();
+    const index = doctors.findIndex((d: any) => d.id === body.id);
+
+    if (index === -1) {
+      return NextResponse.json({ error: 'Doctor not found' }, { status: 404 });
+    }
+
+    doctors[index] = {
+      ...doctors[index],
+      ...body
+    };
+
+    saveDoctors(doctors);
+
+    return NextResponse.json(doctors[index]);
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to update doctor' }, { status: 500 });
   }
 }
 
@@ -71,7 +89,7 @@ export async function DELETE(req: Request) {
     
     let doctors = getDoctors();
     doctors = doctors.filter((d: any) => d.id !== id);
-    fs.writeFileSync(dbPath, JSON.stringify(doctors, null, 2));
+    saveDoctors(doctors);
     
     return NextResponse.json({ success: true });
   } catch (error) {

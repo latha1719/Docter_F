@@ -8,15 +8,19 @@ import styles from '../login/login.module.css'
 export default function Register() {
   const router = useRouter()
 
+  const [fullName, setFullName] = useState('')
+  const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [successMsg, setSuccessMsg] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setSuccessMsg('')
 
     if (password !== confirmPassword) {
       setError("Passwords don't match")
@@ -24,12 +28,39 @@ export default function Register() {
     }
 
     setLoading(true)
-    
-    // Simulating API call
-    setTimeout(() => {
-      alert('Registration successful!')
-      router.push('/login')
-    }, 1000)
+
+    try {
+      const res = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName,
+          phone,
+          email,
+          password
+        })
+      })
+
+      if (!res.ok) {
+        const errData = await res.json()
+        throw new Error(errData.error || 'Registration failed')
+      }
+
+      setSuccessMsg('✅ Registration successful! Redirecting to Login page...')
+      try {
+        localStorage.setItem('registeredUserEmail', email)
+      } catch {
+        // ignore
+      }
+      
+      setTimeout(() => {
+        router.push('/login?registered=true')
+      }, 1200)
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during registration')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -43,11 +74,43 @@ export default function Register() {
             </svg>
           </div>
           <h1 className={styles.title}>Yash Hospital</h1>
-          <p className={styles.subtitle}>Create a new account to get started.</p>
+          <p className={styles.subtitle}>Create your patient account to get started.</p>
         </div>
 
         <form onSubmit={handleSubmit} autoComplete="off">
           
+          <div className={styles.formGroup}>
+            <div className={styles.inputWrapper}>
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                className={styles.input}
+              />
+              <div className={styles.inputIcon}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.formGroup}>
+            <div className={styles.inputWrapper}>
+              <input
+                type="tel"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                className={styles.input}
+              />
+              <div className={styles.inputIcon}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              </div>
+            </div>
+          </div>
+
           <div className={styles.formGroup}>
             <div className={styles.inputWrapper}>
               <input
@@ -108,6 +171,12 @@ export default function Register() {
             </div>
           </div>
 
+          {successMsg && (
+            <div style={{ background: '#f0fdf4', color: '#16a34a', padding: '0.75rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600, marginBottom: '1rem', textAlign: 'center', border: '1px solid #bbf7d0' }}>
+              {successMsg}
+            </div>
+          )}
+
           {error && (
             <div className={styles.error}>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -125,18 +194,18 @@ export default function Register() {
                 <svg className={styles.spinner} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
                 </svg>
-                Creating account...
+                Creating account & Redirecting...
               </>
             ) : (
-              'Register'
+              'Sign Up'
             )}
           </button>
         </form>
 
-        <div className={styles.footer}>
-          <p className={styles.footerText}>Already have an account?</p>
-          <Link href="/login" className={styles.createAccountBtn}>
-            Login to your account
+        <div className={styles.footer} style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.9rem', color: '#64748b' }}>
+          Already have an account?{' '}
+          <Link href="/login" style={{ color: '#3b82f6', fontWeight: 700, textDecoration: 'none' }}>
+            Login
           </Link>
         </div>
 

@@ -1,5 +1,6 @@
 import './globals.css'
 import Navbar from './components/Navbar'
+import RoleGuard from './components/RoleGuard'
 
 export const metadata = {
   title: 'Doctor Online Appointment System',
@@ -14,8 +15,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        {children}
+        <RoleGuard>
+          <Navbar />
+          {children}
+        </RoleGuard>
       </body>
     </html>
   )

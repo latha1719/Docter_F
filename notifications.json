@@ -1,0 +1,47 @@
+[
+  {
+    "id": "NOTIF_1791356792374_958",
+    "type": "reminder",
+    "title": "Doctor Alert: New Booking",
+    "message": "Dr. Rohan Desai: New consultation booked by saravanan on 2026-10-29 (11:30 am - 11:45 am).",
+    "time": "Just now",
+    "isRead": false,
+    "createdAt": "2026-10-07T07:06:32.374Z"
+  },
+  {
+    "id": "NOTIF_1791356792370_545",
+    "type": "confirmation",
+    "title": "Appointment Confirmed",
+    "message": "Patient saravanan booked appointment with Dr. Rohan Desai on 2026-10-29 at 11:30 am - 11:45 am.",
+    "time": "Just now",
+    "isRead": false,
+    "createdAt": "2026-10-07T07:06:32.371Z"
+  },
+  {
+    "id": "NOTIF_1791212451121_362",
+    "type": "reschedule",
+    "title": "Appointment Rescheduled",
+    "message": "Patient Alert: Your consultation with Dr. Varun Joshi was rescheduled from 2026-12-25 (11:30 am - 11:45 am) to 2026-12-25 at 11:30 am - 11:45 am.",
+    "time": "Just now",
+    "isRead": false,
+    "createdAt": "2026-10-05T15:00:51.121Z"
+  },
+  {
+    "id": "NOTIF_1791212417764_178",
+    "type": "reminder",
+    "title": "Doctor Alert: New Booking",
+    "message": "Dr. Varun Joshi: New consultation booked by madhu on 2026-12-25 (11:30 am - 11:45 am).",
+    "time": "Just now",
+    "isRead": false,
+    "createdAt": "2026-10-05T15:00:17.764Z"
+  },
+  {
+    "id": "NOTIF_1791212417759_129",
+    "type": "confirmation",
+    "title": "Appointment Confirmed",
+    "message": "Patient madhu booked appointment with Dr. Varun Joshi on 2026-12-25 at 11:30 am - 11:45 am.",
+    "time": "Just now",
+    "isRead": false,
+    "createdAt": "2026-10-05T15:00:17.760Z"
+  }
+]
